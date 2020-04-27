@@ -36,7 +36,7 @@ namespace Youker.Api.Controllers
         [HttpPut("Edit")]
         public IActionResult EditDevices()
         {
-            return Ok();
+            return Ok("Ok");
         }
 
 
