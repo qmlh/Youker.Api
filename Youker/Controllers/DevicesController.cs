@@ -33,5 +33,12 @@ namespace Youker.Api.Controllers
             return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "查询成功", ResponseData = result });
         }
 
+        [HttpPut("Edit")]
+        public IActionResult EditDevices()
+        {
+            return Ok();
+        }
+
+
     }
 }
