@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Youker.Api</name>
+    </assembly>
+    <members>
+        <member name="M:Youker.Api.Controllers.DevicesController.GetDevices">
+            <summary>
+            获取设备列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Youker.Api.Controllers.UserController">
+            <summary>
+            用户模块
+            </summary>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.Login(Youker.Application.LoginRequestDto)">
+            <summary>
+            登录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.Register(Youker.Application.RegisterDto)">
+            <summary>
+            注册
+            </summary>
+            <param name="registerDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.ResetPassword(System.String)">
+            <summary>
+            找回密码（发送邮件）
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.ConfrimCode(System.String,System.String)">
+            <summary>
+            确认邮箱
+            </summary>
+            <param name="email"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.ChangePwd(System.String,System.String)">
+            <summary>
+            修改密码
+            </summary>
+            <param name="email"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.UserInfo(System.Int32)">
+            <summary>
+            获取个人信息
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.EditUserInfo(Youker.Application.EditUserInfoDto)">
+            <summary>
+            编辑用户信息
+            </summary>
+            <param name="editUserInfoDto"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
