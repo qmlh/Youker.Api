@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Youker.Application\Youker.Application.csproj" />
     <ProjectReference Include="..\Youker.Entity\Youker.Entity.csproj" />
   </ItemGroup>
 

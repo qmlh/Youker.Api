@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using Youker.Application.Devices;
 using Youker.Entity;
 using Youker.Entity.Context;
 
@@ -28,5 +29,22 @@ namespace Youker.Repository
             return _connection.Query<Devices>(execSp, new { device_id }, null, true, null, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
+        public bool DeleteDevice(int device_id)
+        {
+            string execSp = "cp_API_Devices_Delete";
+            return _connection.Execute(execSp, new { device_id }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
+        }
+
+        public bool EditDevicePwd(EditDevicePwdDto editDevicePwdDto)
+        {
+            string execSp = "cp_API_Devices_EditDevicePwd";
+            return _connection.Execute(execSp, new { editDevicePwdDto.device_id, editDevicePwdDto.device_user_password }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
+        }
+
+        public bool Activate(int license_id)
+        {
+            string execSp = "cp_API_Devices_Activate";
+            return _connection.Execute(execSp, new { license_id }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
+        }
     }
 }

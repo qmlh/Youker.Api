@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Youker.Application.Devices;
 using Youker.Entity;
 using Youker.Entity.Context;
 using Youker.Repository;
@@ -26,5 +27,18 @@ namespace Youker.Service
             return _devicesRepository.GetDevicesById(device_id);
         }
 
+        public bool DeleteDevice(int device_id)
+        {
+            return _devicesRepository.DeleteDevice(device_id);
+        }
+        public bool EditDevicePwd(EditDevicePwdDto editDevicePwdDto )
+        {
+            return _devicesRepository.EditDevicePwd(editDevicePwdDto);
+        }
+
+        public bool Activate(int license_id)
+        {
+            return _devicesRepository.Activate(license_id);
+        }
     }
 }
