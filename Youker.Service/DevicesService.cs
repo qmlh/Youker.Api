@@ -17,9 +17,19 @@ namespace Youker.Service
                 _devicesRepository = devicesRepository;
         }
 
-        public List<Devices> GetDevices()
+        public List<Devices> GetDevices(string mac, string key, string password, string is_active, string subdomain,int pageIndex, int pageSize, out int pageCount)
         {
-            return _devicesRepository.GetDevices();
+            return _devicesRepository.GetDevices(mac, key, password, is_active, subdomain, pageIndex, pageSize, out pageCount);
+        }
+
+        /// <summary>
+        /// 获取未分配的设备
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        public List<Devices> GetUnassignedDevices()
+        {
+            return _devicesRepository.GetUnassignedDevices();
         }
 
         public Devices GetDevicesById(int device_id)
@@ -40,5 +50,6 @@ namespace Youker.Service
         {
             return _devicesRepository.Activate(license_id);
         }
+
     }
 }

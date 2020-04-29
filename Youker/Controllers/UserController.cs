@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Youker.Application;
 using Youker.Common;
 using Youker.Common.Enum;
+using Youker.Entity;
 using Youker.Service;
 
 namespace Youker.Api.Controllers
@@ -18,7 +19,7 @@ namespace Youker.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("CorsPolicy-public")]
+    //[EnableCors("CorsPolicy-public")]
     public class UserController : ControllerBase
     {
         public readonly UserService _userService;
@@ -46,6 +47,8 @@ namespace Youker.Api.Controllers
             }
             string token;
             if (_tokenAuthenticationService.IsAuthenticated(loginRequest, out token)) {
+                //记录
+
                 return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success,
                     ResponseMessage = "请求成功",
                     ResponseData = new { 
@@ -57,51 +60,105 @@ namespace Youker.Api.Controllers
         }
 
         /// <summary>
+        /// 注册页面初始化
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("RegisterInit")]
+        public IActionResult RegisterInit()
+        {
+            var country = _userService.GetCountry();
+            var customer = _userService.GetCustomer();
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "请求成功",
+                ResponseData = new RegisterInitDto {
+                    customerList = customer,
+                    coutryList = country
+                }
+            });
+
+        }
+
+        /// <summary>
         /// 注册
         /// </summary>
         /// <param name="registerDto"></param>
         /// <returns></returns>
         [HttpPost("Register")]
-        public IActionResult Register(RegisterDto registerDto)
+        public IActionResult Register([FromBody]RegisterDto registerDto)
         {
-            return Ok();
+            //是否已经注册
+            
+            if (_userService.Register(registerDto)) {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "注册成功" });
+            }
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "注册失败" });
         }
         #endregion
 
         #region 找回密码
         /// <summary>
-        /// 找回密码（发送邮件）
+        /// 找回密码（发送验证码）
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [HttpPost("ResetPassword")]
-        public IActionResult ResetPassword(string email)
+        [HttpPost("SendEmailCode")]
+        public IActionResult SendCode(string email)
         {
-            return Ok();
+            var reuslt = _userService.CheckEmail(email);
+            if (reuslt) {
+                //发送验证码
+                var emailLog = _userService.GetEmailLog(email);
+                if (emailLog != null) {
+                    if (SMSHelper.CheckTime(emailLog.CreateTime) < 30)
+                    {
+                        return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "邮箱已发送" });
+                    }
+                }
+                string validateCode = SMSHelper.GetValidateCode();
+                var IsSendSuccess = SMSHelper.SendMail(validateCode, email);
+                EmailValidateCodeLog emailValidateCodeLog = new EmailValidateCodeLog() {
+                    Email = email,
+                    Status = IsSendSuccess ? "SUCCESS" : "FAIL",
+                    ValidateCode = validateCode
+                };
+                _userService.CreateEmailLog(emailValidateCodeLog);
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "邮件已发送" });
+            }
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "邮箱尚未注册" });
         }
 
         /// <summary>
-        /// 确认邮箱
+        /// 确认验证码，并且修改密码
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        [HttpPost("ConfrimCode")]
-        public IActionResult ConfrimCode(string email,string code)
-        {
-            return Ok();
-        }
-
-        /// <summary>
-        /// 修改密码
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
+        /// <param name="changePwdDto"></param>
         /// <returns></returns>
         [HttpPost("ChangePwd")]
-        public IActionResult ChangePwd(string email,string password)
+        public IActionResult ChangePwd(ChangePwdDto changePwdDto)
         {
-            return Ok();
+            changePwdDto.Email = changePwdDto.Email.Trim();
+            //第一步 是否发送过短消息 查询最后一次发送短消息实体对象，验证是否超时
+            EmailValidateCodeLog entity = _userService.GetEmailLog(changePwdDto.Email);
+            if (entity != null)
+            {
+                if (SMSHelper.CheckTime(entity.CreateTime) > 30 * 60)
+                {
+                    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "验证码已过期" });
+                }
+                if (entity.ValidateCode == changePwdDto.Code)
+                {
+                    //修改密码
+                    var reuslt = _userService.ChangePwdByEmail(changePwdDto.Email, changePwdDto.NewPassword);
+                    if (reuslt)
+                    {
+                        return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "修改密码成功" });
+                    }
+                    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "修改密码失败" });
+                }
+                else
+                {
+                    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "验证码错误" });
+                }
+            }
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "请求失败，请重新获取验证码" });
         }
 
         #endregion
@@ -116,7 +173,11 @@ namespace Youker.Api.Controllers
         //[Authorize]
         public IActionResult UserInfo(int userId)
         {
-            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "Info请求成功" });
+            var result = _userService.GetUserInfoByUserId(userId);
+            if (result!=null) {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "请求成功" ,ResponseData = result });
+            }
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "用户不存在" });
         }
 
         /// <summary>
@@ -126,9 +187,15 @@ namespace Youker.Api.Controllers
         /// <returns></returns>
         [HttpPut("Edit")]
         //[Authorize]
-        public IActionResult EditUserInfo(EditUserInfoDto editUserInfoDto)
+        public IActionResult EditUserInfo([FromBody]EditUserInfoDto editUserInfoDto)
         {
-            return Ok();
+            int user_id = 0;
+            var result = _userService.EditUserInfo(user_id,editUserInfoDto);
+            if (result)
+            {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "修改成功" });
+            }
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "修改失败" });
         }
         #endregion
     }

@@ -28,10 +28,24 @@ namespace Youker.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("List")]
-        public IActionResult GetDevices(string mac,string key,string password,string is_active,string subdomain,
-            int pageIndex = 1,int pageSize = 10)
+        public IActionResult GetDevices(string mac,string key,string password,string is_active,string subdomain,int pageIndex = 1,int pageSize = 10)
         {
-            var result = _devicesService.GetDevices();
+            var result = _devicesService.GetDevices(mac, key, password, is_active, subdomain, pageIndex, pageSize, out int pageCount);
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "查询成功", ResponseData = 
+                new {
+                    list = result,
+                    page_count = pageCount
+                }});
+        }
+
+        /// <summary>
+        /// 获取未激活设备列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("UnassignedList")]
+        public IActionResult GetUnassignedDevices()
+        {
+            var result = _devicesService.GetUnassignedDevices();
             return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "查询成功", ResponseData = result });
         }
 

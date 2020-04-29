@@ -6,8 +6,7 @@ namespace Youker.Application
 {
     public class RegisterDto
     {
-        public string customer_code { get; set; }
-        public string customer_name { get; set; }
+        public string customer_id { get; set; }
         public string user_code { get; set; }
         public string user_name { get; set; }
         public string password { get; set; }

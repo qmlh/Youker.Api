@@ -17,12 +17,28 @@ namespace Youker.Repository
             
         }
 
-        public List<Devices> GetDevices()
+        public List<Devices> GetDevices(string mac, string key, string password, string is_active, string subdomain,int pageIndex, int pageSize, out int pageCount)
         {
             string execSp = "cp_API_Devices_List";
-            return _connection.Query<Devices>(execSp, new { }, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+            var parems = new DynamicParameters();//建立一个parem对象
+            parems.Add("@device_mac", mac);
+            parems.Add("@device_key", key);
+            parems.Add("@device_user_password", password);
+            parems.Add("@is_active", is_active);
+            parems.Add("@device_subdomain", subdomain);
+            parems.Add("@page_size", pageSize);
+            parems.Add("@page_index", pageIndex);
+            parems.Add("@page_count", 0, DbType.Int32, ParameterDirection.Output);//输出返回值
+            var list = _connection.Query<Devices>(execSp, parems, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+            pageCount = parems.Get<int>("@page_count");
+            return list;
         }
 
+        public List<Devices> GetUnassignedDevices()
+        {
+            string execSp = "cp_API_Devices_List_User_Unassigned";
+            return _connection.Query<Devices>(execSp, new { }, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+        }
         public Devices GetDevicesById(int device_id)
         {
             string execSp = "cp_API_Devices_Info";
