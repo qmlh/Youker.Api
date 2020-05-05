@@ -19,7 +19,7 @@ namespace Youker.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    //[EnableCors("CorsPolicy-public")]
+    [EnableCors("CorsPolicy-public")]
     public class UserController : ControllerBase
     {
         public readonly UserService _userService;
@@ -38,15 +38,15 @@ namespace Youker.Api.Controllers
         [HttpPost("Login")]
         public IActionResult Login([FromBody]LoginRequestDto loginRequest)
         {
-            var user = _userService.UserLogin(loginRequest.Customer_Code, loginRequest.UserName);
+            var user = _userService.UserLogin(loginRequest.CustomerCode, loginRequest.UserName);
             if (user == null) {
-                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.ParamError, ResponseMessage = "客户代码或用户代码错误" });
+                return BadRequest(new ResponseBody() { ResponseCode = ResponseCodeEnum.ParamError, ResponseMessage = "客户代码或用户代码错误" });
             }
             if (user.password != loginRequest.Password) {
-                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.ParamError, ResponseMessage = "密码错误" });
+                return BadRequest(new ResponseBody() { ResponseCode = ResponseCodeEnum.ParamError, ResponseMessage = "密码错误" });
             }
             string token;
-            if (_tokenAuthenticationService.IsAuthenticated(loginRequest, out token)) {
+            if (_tokenAuthenticationService.IsAuthenticated(user.user_id, out token)) {
                 //记录
 
                 return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success,
@@ -56,7 +56,18 @@ namespace Youker.Api.Controllers
                     } 
                 });
             }
-            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "请求失败" });
+            return BadRequest(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "请求失败" });
+        }
+
+        /// <summary>
+        /// 获取Token
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Session")]
+        public IActionResult Session()
+        {
+            //var result = _tokenAuthenticationService.ReadToken();
+            return Ok();
         }
 
         /// <summary>

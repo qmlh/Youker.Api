@@ -4,10 +4,63 @@
         <name>Youker.Api</name>
     </assembly>
     <members>
-        <member name="M:Youker.Api.Controllers.DevicesController.GetDevices">
+        <member name="M:Youker.Api.Controllers.DevicesController.GetDevices(System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32)">
             <summary>
             获取设备列表
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.DevicesController.GetUnassignedDevices">
+            <summary>
+            获取未激活设备列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.DevicesController.GetDeviceById(System.Int32)">
+            <summary>
+            获取设备信息
+            </summary>
+            <param name="device_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.DevicesController.DeleteDevice(System.Int32)">
+            <summary>
+            删除设备
+            </summary>
+            <param name="device_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.DevicesController.EditDevicePwd(Youker.Application.Devices.EditDevicePwdDto)">
+            <summary>
+            修改设备密码
+            </summary>
+            <param name="editDevicePwdDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.DevicesController.Activate(System.Int32)">
+            <summary>
+            激活license
+            </summary>
+            <param name="license_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.LicensesController.GetLicenses">
+            <summary>
+            获取用户可用Licenses
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.LicensesController.GetAllLicenses">
+            <summary>
+            获取用户所有Licenses
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.LicensesController.AssignLicenses(Youker.Application.Licenses.AssignLicensesDto)">
+            <summary>
+            分配Licenses
+            </summary>
+            <param name="assignLicensesDto"></param>
             <returns></returns>
         </member>
         <member name="T:Youker.Api.Controllers.UserController">
@@ -21,6 +74,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Youker.Api.Controllers.UserController.Session">
+            <summary>
+            获取Token
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.RegisterInit">
+            <summary>
+            注册页面初始化
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Youker.Api.Controllers.UserController.Register(Youker.Application.RegisterDto)">
             <summary>
             注册
@@ -28,27 +93,18 @@
             <param name="registerDto"></param>
             <returns></returns>
         </member>
-        <member name="M:Youker.Api.Controllers.UserController.ResetPassword(System.String)">
+        <member name="M:Youker.Api.Controllers.UserController.SendCode(System.String)">
             <summary>
-            找回密码（发送邮件）
+            找回密码（发送验证码）
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Youker.Api.Controllers.UserController.ConfrimCode(System.String,System.String)">
+        <member name="M:Youker.Api.Controllers.UserController.ChangePwd(Youker.Application.ChangePwdDto)">
             <summary>
-            确认邮箱
+            确认验证码，并且修改密码
             </summary>
-            <param name="email"></param>
-            <param name="code"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Youker.Api.Controllers.UserController.ChangePwd(System.String,System.String)">
-            <summary>
-            修改密码
-            </summary>
-            <param name="email"></param>
-            <param name="password"></param>
+            <param name="changePwdDto"></param>
             <returns></returns>
         </member>
         <member name="M:Youker.Api.Controllers.UserController.UserInfo(System.Int32)">

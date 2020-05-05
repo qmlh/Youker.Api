@@ -16,23 +16,23 @@ namespace Youker.Service
         {
             _tokenManagement = tokenManagement.Value;
         }
-        public bool IsAuthenticated(LoginRequestDto request, out string token)
+        public bool IsAuthenticated(int userid, out string token)
         {
             token = string.Empty;
             //if (!_userService.IsValid(request))
             //    return false;
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name,request.UserName)
+                new Claim(ClaimTypes.Name,userid.ToString())
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var jwtToken = new JwtSecurityToken(_tokenManagement.Issuer, _tokenManagement.Audience, claims, expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration), signingCredentials: credentials);
 
             token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-
             return true;
         }
+
     }
    
 }

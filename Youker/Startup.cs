@@ -53,7 +53,7 @@ namespace Youker
                         builder.SetIsOriginAllowed(_ => true)   //WithOrigins and define a specific origin to be allowed (e.g. https://mydomain.com)
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        //.AllowCredentials()
+                        .AllowCredentials()
                 .Build());
                 //options.AddPolicy(name: "CorsPolicy-public",
                 //             builder =>

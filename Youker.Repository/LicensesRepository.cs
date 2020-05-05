@@ -22,10 +22,33 @@ namespace Youker.Repository
             return _connection.Query<Licenses>(execSp, new { user_id }, null, true, null, commandType: CommandType.StoredProcedure).ToList();
         }
 
-        //分配授权码
-        public void AssignLicenses()
-        { 
-            
+        public List<Licenses> GetAllLicenses(int user_id)
+        {
+            string execSp = "cp_API_Licenses_List_All";
+            return _connection.Query<Licenses>(execSp, new { user_id }, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        /// <summary>
+        /// 确认授权码的剩余数量
+        /// </summary>
+        /// <param name="license_id"></param>
+        /// <returns></returns>
+        public bool CheckQuantity(int license_id)
+        {
+            string execSp = "cp_API_Licenses_CheckQuantity";
+            return _connection.Query<Licenses>(execSp, new { license_id }, null, true, null, commandType: CommandType.StoredProcedure).ToList().Count() > 0 ? true : false;
+        }
+
+        /// <summary>
+        /// 分配授权码
+        /// </summary>
+        /// <param name="device_id"></param>
+        /// <param name="license_id"></param>
+        /// <returns></returns>
+        public bool AssignLicenses(int device_id, int license_id)
+        {
+            string execSp = "cp_API_Licenses_Assign";
+            return _connection.Execute(execSp, new { device_id, license_id }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
         }
     }
 }

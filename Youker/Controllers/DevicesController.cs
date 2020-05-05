@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Youker.Application.Devices;
@@ -15,6 +16,7 @@ namespace Youker.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [EnableCors("CorsPolicy-public")]
     public class DevicesController : ControllerBase
     {
         public readonly DevicesService _devicesService;
@@ -28,14 +30,20 @@ namespace Youker.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("List")]
-        public IActionResult GetDevices(string mac,string key,string password,string is_active,string subdomain,int pageIndex = 1,int pageSize = 10)
+        public IActionResult GetDevices(string mac,string key,string password,string is_active,string subdomain,int pageIndex = 1, int pageSize = 10)
         {
             var result = _devicesService.GetDevices(mac, key, password, is_active, subdomain, pageIndex, pageSize, out int pageCount);
-            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "查询成功", ResponseData = 
-                new {
+            return Ok(new ResponseBody()
+            {
+                ResponseCode = ResponseCodeEnum.Success,
+                ResponseMessage = "查询成功",
+                ResponseData =
+                new
+                {
                     list = result,
                     page_count = pageCount
-                }});
+                }
+            });
         }
 
         /// <summary>
