@@ -16,4 +16,10 @@ namespace Youker.Entity
         public int device_license_id { get; set; }
         public string device_subdomain { get; set; }
     }
+
+    public class DevicesWithLicense : Devices
+    {
+        public string device_license_key { get; set; }
+        public int device_license_is_active { get; set; }
+    }
 }

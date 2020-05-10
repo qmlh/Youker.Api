@@ -114,5 +114,20 @@ namespace Youker.Api.Controllers
             return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "激活成功" });
         }
 
+        /// <summary>
+        /// 激活license
+        /// </summary>
+        /// <param name="license_id"></param>
+        /// <returns></returns>
+        [HttpPut("ActivateDevLic")]
+        public IActionResult ActivateDeviceLicense(int device_license_id)
+        {
+            if (_devicesService.ActivateDeviceLicense(device_license_id))
+            {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "激活成功" });
+            }
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "激活成功" });
+        }
+
     }
 }

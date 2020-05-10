@@ -17,7 +17,7 @@ namespace Youker.Repository
             
         }
 
-        public List<Devices> GetDevices(string mac, string key, string password, string is_active, string subdomain,int pageIndex, int pageSize, out int pageCount)
+        public List<DevicesWithLicense> GetDevices(string mac, string key, string password, string is_active, string subdomain,int pageIndex, int pageSize, out int pageCount)
         {
             string execSp = "cp_API_Devices_List";
             var parems = new DynamicParameters();//建立一个parem对象
@@ -29,20 +29,20 @@ namespace Youker.Repository
             parems.Add("@page_size", pageSize);
             parems.Add("@page_index", pageIndex);
             parems.Add("@page_count", 0, DbType.Int32, ParameterDirection.Output);//输出返回值
-            var list = _connection.Query<Devices>(execSp, parems, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+            var list = _connection.Query<DevicesWithLicense>(execSp, parems, null, true, null, commandType: CommandType.StoredProcedure).ToList();
             pageCount = parems.Get<int>("@page_count");
             return list;
         }
 
-        public List<Devices> GetUnassignedDevices()
+        public List<DevicesWithLicense> GetUnassignedDevices()
         {
             string execSp = "cp_API_Devices_List_User_Unassigned";
-            return _connection.Query<Devices>(execSp, new { }, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+            return _connection.Query<DevicesWithLicense>(execSp, new { }, null, true, null, commandType: CommandType.StoredProcedure).ToList();
         }
-        public Devices GetDevicesById(int device_id)
+        public DevicesWithLicense GetDevicesById(int device_id)
         {
             string execSp = "cp_API_Devices_Info";
-            return _connection.Query<Devices>(execSp, new { device_id }, null, true, null, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            return _connection.Query<DevicesWithLicense>(execSp, new { device_id }, null, true, null, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
         public bool DeleteDevice(int device_id)
@@ -62,5 +62,12 @@ namespace Youker.Repository
             string execSp = "cp_API_Devices_Activate";
             return _connection.Execute(execSp, new { license_id }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
         }
+
+        public bool ActivateDeviceLicense(int device_license_id)
+        {
+            string execSp = "cp_API_Devices_License_Activate";
+            return _connection.Execute(execSp, new { device_license_id }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
+        }
+        
     }
 }

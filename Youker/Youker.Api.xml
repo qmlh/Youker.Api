@@ -44,6 +44,13 @@
             <param name="license_id"></param>
             <returns></returns>
         </member>
+        <member name="M:Youker.Api.Controllers.DevicesController.ActivateDeviceLicense(System.Int32)">
+            <summary>
+            激活license
+            </summary>
+            <param name="license_id"></param>
+            <returns></returns>
+        </member>
         <member name="M:Youker.Api.Controllers.LicensesController.GetLicenses">
             <summary>
             获取用户可用Licenses

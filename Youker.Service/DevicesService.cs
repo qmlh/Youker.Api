@@ -17,7 +17,7 @@ namespace Youker.Service
                 _devicesRepository = devicesRepository;
         }
 
-        public List<Devices> GetDevices(string mac, string key, string password, string is_active, string subdomain,int pageIndex, int pageSize, out int pageCount)
+        public List<DevicesWithLicense> GetDevices(string mac, string key, string password, string is_active, string subdomain,int pageIndex, int pageSize, out int pageCount)
         {
             return _devicesRepository.GetDevices(mac, key, password, is_active, subdomain, pageIndex, pageSize, out pageCount);
         }
@@ -27,12 +27,12 @@ namespace Youker.Service
         /// </summary>
         /// <param name="user_id"></param>
         /// <returns></returns>
-        public List<Devices> GetUnassignedDevices()
+        public List<DevicesWithLicense> GetUnassignedDevices()
         {
             return _devicesRepository.GetUnassignedDevices();
         }
 
-        public Devices GetDevicesById(int device_id)
+        public DevicesWithLicense GetDevicesById(int device_id)
         {
             return _devicesRepository.GetDevicesById(device_id);
         }
@@ -50,6 +50,12 @@ namespace Youker.Service
         {
             return _devicesRepository.Activate(license_id);
         }
+
+        public bool ActivateDeviceLicense(int device_license_id)
+        {
+            return _devicesRepository.ActivateDeviceLicense(device_license_id);
+        }
+        
 
     }
 }
