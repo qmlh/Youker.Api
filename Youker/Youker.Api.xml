@@ -48,7 +48,7 @@
             <summary>
             激活license
             </summary>
-            <param name="license_id"></param>
+            <param name="device_license_id"></param>
             <returns></returns>
         </member>
         <member name="M:Youker.Api.Controllers.LicensesController.GetLicenses">

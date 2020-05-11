@@ -115,9 +115,9 @@ namespace Youker.Api.Controllers
         }
 
         /// <summary>
-        /// 激活license
+        /// 激活license！
         /// </summary>
-        /// <param name="license_id"></param>
+        /// <param name="device_license_id"></param>
         /// <returns></returns>
         [HttpPut("ActivateDevLic")]
         public IActionResult ActivateDeviceLicense(int device_license_id)
