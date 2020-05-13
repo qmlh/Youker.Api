@@ -46,7 +46,7 @@
         </member>
         <member name="M:Youker.Api.Controllers.DevicesController.ActivateDeviceLicense(System.Int32)">
             <summary>
-            激活license
+            激活license！
             </summary>
             <param name="device_license_id"></param>
             <returns></returns>
@@ -68,6 +68,13 @@
             分配Licenses
             </summary>
             <param name="assignLicensesDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.LicensesController.AssignLicensesBatch(Youker.Application.Licenses.AssignLicensesBatchDto)">
+            <summary>
+            批量分配Licenses
+            </summary>
+            <param name="assignLicensesBatchDto"></param>
             <returns></returns>
         </member>
         <member name="T:Youker.Api.Controllers.UserController">

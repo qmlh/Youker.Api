@@ -61,8 +61,37 @@ namespace Youker.Api.Controllers
                 return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "授权码可激活设备数量不足" });
             }
             var result = _licensesService.AssignLicenses(assignLicensesDto.device_id, assignLicensesDto.license_id);
-            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "分配成功", ResponseData = result });
+            if (result)
+            {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "分配成功" });
+            }
+            return BadRequest(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "分配失败" });
         }
+
+        /// <summary>
+        /// 批量分配Licenses
+        /// </summary>
+        /// <param name="assignLicensesBatchDto"></param>
+        /// <returns></returns>
+        [HttpPut("AssignBatch")]
+        public IActionResult AssignLicensesBatch(AssignLicensesBatchDto assignLicensesBatchDto)
+        {
+            if (assignLicensesBatchDto.device_ids.Count == 0) 
+            {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "请选择设备" });
+            }
+            //if (!_licensesService.CheckQuantity(assignLicensesBatchDto.license_id, assignLicensesBatchDto.device_ids.Count))
+            //{
+            //    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "授权码可激活设备数量不足" });
+            //}
+            //var result = _licensesService.AssignLicensesBatch(assignLicensesBatchDto.device_ids, assignLicensesBatchDto.license_id, assignLicensesBatchDto.is_active);
+            //if (result) {
+            //    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "分配成功" });
+            //}
+            return BadRequest(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "分配失败"});
+        }
+
+
 
         private int UserId {
             get {

@@ -31,11 +31,19 @@ namespace Youker.Service
             return _licensesRepository.CheckQuantity(license_id);
         }
 
+        public bool CheckQuantity(int license_id, int count)
+        {
+            return _licensesRepository.CheckQuantity(license_id, count);
+        }
+
         public bool AssignLicenses(int device_id, int license_id)
         {
             return _licensesRepository.AssignLicenses(device_id, license_id);
         }
 
-
+        public bool AssignLicensesBatch(List<int> device_ids, int license_id, int is_active)
+        {
+            return _licensesRepository.AssignLicensesBatch(device_ids, license_id, is_active);
+        }
     }
 }

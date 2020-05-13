@@ -40,6 +40,18 @@ namespace Youker.Repository
         }
 
         /// <summary>
+        /// 确认授权码的剩余数量
+        /// </summary>
+        /// <param name="license_id"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public bool CheckQuantity(int license_id, int count)
+        {
+            string execSp = "cp_API_Licenses_CheckQuantity";
+            return _connection.Query<Licenses>(execSp, new { license_id }, null, true, null, commandType: CommandType.StoredProcedure).ToList().Count() >= count ? true : false;
+        }
+        
+        /// <summary>
         /// 分配授权码
         /// </summary>
         /// <param name="device_id"></param>
@@ -50,5 +62,20 @@ namespace Youker.Repository
             string execSp = "cp_API_Licenses_Assign";
             return _connection.Execute(execSp, new { device_id, license_id }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
         }
+
+        /// <summary>
+        /// 批量分配授权码
+        /// </summary>
+        /// <param name="device_ids"></param>
+        /// <param name="license_id"></param>
+        /// <returns></returns>
+        public bool AssignLicensesBatch(List<int> device_ids, int license_id, int is_active)
+        {
+            string device_id = string.Join(",", device_ids);
+            string execSp = "cp_API_Licenses_Assign_Batch";
+            return _connection.Execute(execSp, new { device_id, license_id, is_active }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
+        }
+
+
     }
 }
