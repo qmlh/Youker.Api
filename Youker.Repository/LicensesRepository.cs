@@ -48,7 +48,8 @@ namespace Youker.Repository
         public bool CheckQuantity(int license_id, int count)
         {
             string execSp = "cp_API_Licenses_CheckQuantity";
-            return _connection.Query<Licenses>(execSp, new { license_id }, null, true, null, commandType: CommandType.StoredProcedure).ToList().Count() >= count ? true : false;
+            var result = _connection.ExecuteScalar<int>(execSp, new { license_id }, null, null, commandType: CommandType.StoredProcedure);
+            return result >= count ? true : false;
         }
         
         /// <summary>
@@ -69,11 +70,12 @@ namespace Youker.Repository
         /// <param name="device_ids"></param>
         /// <param name="license_id"></param>
         /// <returns></returns>
-        public bool AssignLicensesBatch(List<int> device_ids, int license_id, int is_active)
+        public bool AssignLicensesBatch(List<int> device_ids, List<int> license_ids, int is_active)
         {
             string device_id = string.Join(",", device_ids);
+            string license_id = string.Join(",", license_ids);
             string execSp = "cp_API_Licenses_Assign_Batch";
-            return _connection.Execute(execSp, new { device_id, license_id, is_active }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
+            return _connection.Execute(execSp, new { device_ids=device_id, license_ids=license_id, is_active }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
         }
 
 

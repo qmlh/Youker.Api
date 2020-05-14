@@ -41,9 +41,9 @@ namespace Youker.Service
             return _licensesRepository.AssignLicenses(device_id, license_id);
         }
 
-        public bool AssignLicensesBatch(List<int> device_ids, int license_id, int is_active)
+        public bool AssignLicensesBatch(List<int> device_ids, List<int> license_ids, int is_active)
         {
-            return _licensesRepository.AssignLicensesBatch(device_ids, license_id, is_active);
+            return _licensesRepository.AssignLicensesBatch(device_ids, license_ids, is_active);
         }
     }
 }

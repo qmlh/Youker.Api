@@ -80,14 +80,27 @@ namespace Youker.Api.Controllers
             {
                 return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "请选择设备" });
             }
-            //if (!_licensesService.CheckQuantity(assignLicensesBatchDto.license_id, assignLicensesBatchDto.device_ids.Count))
-            //{
-            //    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "授权码可激活设备数量不足" });
-            //}
-            //var result = _licensesService.AssignLicensesBatch(assignLicensesBatchDto.device_ids, assignLicensesBatchDto.license_id, assignLicensesBatchDto.is_active);
-            //if (result) {
-            //    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "分配成功" });
-            //}
+            bool IsLicenseSufficient = true;
+            List<int> license_ids = new List<int>();
+            assignLicensesBatchDto.license_ids.ForEach(license =>
+            {
+                if (!_licensesService.CheckQuantity(license.license_id, license.count))
+                {
+                    IsLicenseSufficient = false;
+                }
+                for (int i = 0; i < license.count; i++) {
+                    license_ids.Add(license.license_id);
+                }
+            });
+            if (!IsLicenseSufficient) {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "授权码可激活设备数量不足" });
+            }
+            
+            var result = _licensesService.AssignLicensesBatch(assignLicensesBatchDto.device_ids, license_ids, assignLicensesBatchDto.is_active);
+            if (result)
+            {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "分配成功" });
+            }
             return BadRequest(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "分配失败"});
         }
 
