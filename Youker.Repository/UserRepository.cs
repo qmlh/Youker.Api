@@ -100,6 +100,24 @@ namespace Youker.Repository
             }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
         }
 
+        public bool EditUserInfo(EditUserInfoManageDto editUserInfoManageDto)
+        {
+            string execSp = "cp_API_User_Management_EditUserInfo";
+            return _connection.Execute(execSp, new
+            {
+                editUserInfoManageDto.user_id,
+                editUserInfoManageDto.password,
+                editUserInfoManageDto.is_active,
+                editUserInfoManageDto.user_level,
+                editUserInfoManageDto.user_name,
+                editUserInfoManageDto.email,
+                editUserInfoManageDto.mobile,
+                editUserInfoManageDto.telephone,
+                editUserInfoManageDto.website,
+                editUserInfoManageDto.country_id,
+            }, null, null, commandType: CommandType.StoredProcedure) > 0 ? true : false;
+        }
+
         public List<CustomerDto> GetCustomer()
         {
             string execSp = "cp_API_User_GetCustomer";

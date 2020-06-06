@@ -56,6 +56,11 @@ namespace Youker.Service
             return _userRepository.EditUserInfo(user_id,editUserInfoDto);
         }
 
+        public bool EditUserInfo(EditUserInfoManageDto editUserInfoManageDto)
+        {
+            return _userRepository.EditUserInfo(editUserInfoManageDto);
+        }
+
         public List<CustomerDto> GetCustomer()
         {
             return _userRepository.GetCustomer();

@@ -266,11 +266,16 @@ namespace Youker.Api.Controllers
         /// </summary>
         /// <param name="editUserInfoManageDto"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost("Management_Edit")]
         public IActionResult EditUserInfo([FromBody]EditUserInfoManageDto editUserInfoManageDto)
         {
             // 权限？
-            return Ok();
+            var result = _userService.EditUserInfo(editUserInfoManageDto);
+            if (result)
+            {
+                return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "修改成功" });
+            }
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "修改失败" });
         }
 
         #endregion
