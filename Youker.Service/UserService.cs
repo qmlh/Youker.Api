@@ -61,6 +61,16 @@ namespace Youker.Service
             return _userRepository.GetCustomer();
         }
 
+        public List<User> GetUsers(int customer_id)
+        {
+            return _userRepository.GetUsers(customer_id);
+        }
+
+        public List<User> GetUsers()
+        {
+            return _userRepository.GetUsers();
+        }
+
         public List<CountryDto> GetCountry()
         {
             return _userRepository.GetCountry();

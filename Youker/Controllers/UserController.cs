@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -178,13 +179,12 @@ namespace Youker.Api.Controllers
         /// <summary>
         /// 获取个人信息
         /// </summary>
-        /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("Info")]
-        //[Authorize]
-        public IActionResult UserInfo(int userId)
+        [Authorize]
+        public IActionResult UserInfo()
         {
-            var result = _userService.GetUserInfoByUserId(userId);
+            var result = _userService.GetUserInfoByUserId(UserId);
             if (result!=null) {
                 return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "请求成功" ,ResponseData = result });
             }
@@ -197,11 +197,10 @@ namespace Youker.Api.Controllers
         /// <param name="editUserInfoDto"></param>
         /// <returns></returns>
         [HttpPut("Edit")]
-        //[Authorize]
+        [Authorize]
         public IActionResult EditUserInfo([FromBody]EditUserInfoDto editUserInfoDto)
         {
-            int user_id = 0;
-            var result = _userService.EditUserInfo(user_id,editUserInfoDto);
+            var result = _userService.EditUserInfo(UserId, editUserInfoDto);
             if (result)
             {
                 return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "修改成功" });
@@ -209,6 +208,82 @@ namespace Youker.Api.Controllers
             return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "修改失败" });
         }
         #endregion
+
+        ///// <summary>
+        ///// 用户Session
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpGet("Session")]
+        //[Authorize]
+        //public IActionResult UserSession()
+        //{
+        //    return Ok();
+        //}
+
+        #region 用户管理
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Management")]
+        [Authorize]
+        public IActionResult UserManagement()
+        {
+            var user = _userService.GetUserInfoByUserId(UserId);
+            List<User> users = new List<User>();
+            switch (user.user_type)
+            {
+                
+                case "supper":
+                case "admin":
+                    users = _userService.GetUsers(user.customer_id);
+                    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "获取成功", ResponseData = users });
+                case "sysadm":
+                case "prdadm":
+                case "prdowner":
+                    users = _userService.GetUsers();
+                    return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "获取成功", ResponseData = users });
+                case "user":
+                default:
+                    return Unauthorized(new ResponseBody() { ResponseCode = ResponseCodeEnum.Fail, ResponseMessage = "没有权限" });
+            }
+        }
+
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="user_id"></param>
+        /// <returns></returns>
+        [HttpGet("Management_Info")]
+        public IActionResult UserInfo(int user_id)
+        {
+            var user = _userService.GetUserInfoByUserId(user_id);
+            return Ok(new ResponseBody() { ResponseCode = ResponseCodeEnum.Success, ResponseMessage = "获取成功", ResponseData = user });
+        }
+
+        /// <summary>
+        /// 修改用户信息
+        /// </summary>
+        /// <param name="editUserInfoManageDto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult EditUserInfo([FromBody]EditUserInfoManageDto editUserInfoManageDto)
+        {
+            // 权限？
+            return Ok();
+        }
+
+        #endregion
+
+        private int UserId
+        {
+            get
+            {
+                var claimsIdentity = this.User.Identity as ClaimsIdentity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value;
+                return Convert.ToInt32(userId);
+            }
+        }
     }
 
 

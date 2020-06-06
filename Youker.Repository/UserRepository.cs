@@ -73,13 +73,24 @@ namespace Youker.Repository
             return _connection.Query<User>(execSp, new { user_id }, null, true, null, commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
+        public List<User> GetUsers(int customer_id)
+        {
+            string execSp = "cp_API_User_GetUserListByCustomerId";
+            return _connection.Query<User>(execSp, new { customer_id }, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public List<User> GetUsers()
+        {
+            string execSp = "cp_API_User_GetUserList";
+            return _connection.Query<User>(execSp, null, null, true, null, commandType: CommandType.StoredProcedure).ToList();
+        }
+
         public bool EditUserInfo(int user_id,EditUserInfoDto editUserInfoDto)
         {
             string execSp = "cp_API_User_EditUserInfo";
             return _connection.Execute(execSp, new
             {
                 user_id,
-                editUserInfoDto.user_code,
                 editUserInfoDto.user_name,
                 editUserInfoDto.email,
                 editUserInfoDto.mobile,

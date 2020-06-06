@@ -121,11 +121,10 @@
             <param name="changePwdDto"></param>
             <returns></returns>
         </member>
-        <member name="M:Youker.Api.Controllers.UserController.UserInfo(System.Int32)">
+        <member name="M:Youker.Api.Controllers.UserController.UserInfo">
             <summary>
             获取个人信息
             </summary>
-            <param name="userId"></param>
             <returns></returns>
         </member>
         <member name="M:Youker.Api.Controllers.UserController.EditUserInfo(Youker.Application.EditUserInfoDto)">
@@ -133,6 +132,19 @@
             编辑用户信息
             </summary>
             <param name="editUserInfoDto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.UserManagement">
+            <summary>
+            获取用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Youker.Api.Controllers.UserController.UserInfo(System.Int32)">
+            <summary>
+            获取用户信息
+            </summary>
+            <param name="user_id"></param>
             <returns></returns>
         </member>
     </members>
